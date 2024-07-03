@@ -283,7 +283,7 @@ fun IntroShowcaseScope.Content(modifier: Modifier) {
                         style = ShowcaseStyle.Default.copy(
                             backgroundColor = Color(0xFFFFCC80), // specify color of background
                             backgroundAlpha = 0.98f, // specify transparency of background
-                            targetCircleColor = Color.White // specify color of target circle
+                            targetCircleColor = Color.Red // specify color of target circle
                         ),
                         content = {
                             Column(

@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -81,10 +82,10 @@ internal fun ShowcaseContent(
         max(targetCords.size.width.absoluteValue, targetCords.size.height.absoluteValue)
     val targetRadius = maxDimension / 2f + 40f
 
-    val animationSpec = infiniteRepeatable<Float>(
-        animation = tween(2000, easing = FastOutLinearInEasing),
-        repeatMode = RepeatMode.Restart,
-    )
+//    val animationSpec = infiniteRepeatable<Float>(
+//        animation = tween(2000, easing = FastOutLinearInEasing),
+//        repeatMode = RepeatMode.Restart,
+//    )
 
     var outerOffset by remember(target) {
         mutableStateOf(Offset(0f, 0f))
@@ -94,76 +95,76 @@ internal fun ShowcaseContent(
         mutableFloatStateOf(0f)
     }
 
-    val outerAnimatable = remember { Animatable(0.6f) }
-    val outerAlphaAnimatable = remember(target) { Animatable(0f) }
+//    val outerAnimatable = remember { Animatable(0.6f) }
+//    val outerAlphaAnimatable = remember(target) { Animatable(0f) }
+//
+//    val animatables = remember(target) {
+//        listOf(
+//            Animatable(0f),
+//            Animatable(0f)
+//        )
+//    }
 
-    val animatables = remember(target) {
-        listOf(
-            Animatable(0f),
-            Animatable(0f)
-        )
-    }
-
-    LaunchedEffect(target) {
-        outerAnimatable.snapTo(0.6f)
-
-        outerAnimatable.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = 500,
-                easing = FastOutSlowInEasing,
-            ),
-        )
-    }
-
-    LaunchedEffect(target) {
-        outerAlphaAnimatable.animateTo(
-            targetValue = target.style.backgroundAlpha,
-            animationSpec = tween(
-                durationMillis = 500,
-                easing = FastOutSlowInEasing,
-            ),
-        )
-    }
+//    LaunchedEffect(target) {
+//        outerAnimatable.snapTo(0.6f)
+//
+//        outerAnimatable.animateTo(
+//            targetValue = 1f,
+//            animationSpec = tween(
+//                durationMillis = 500,
+//                easing = FastOutSlowInEasing,
+//            ),
+//        )
+//    }
+//
+//    LaunchedEffect(target) {
+//        outerAlphaAnimatable.animateTo(
+//            targetValue = target.style.backgroundAlpha,
+//            animationSpec = tween(
+//                durationMillis = 500,
+//                easing = FastOutSlowInEasing,
+//            ),
+//        )
+//    }
 
     LaunchedEffect(dismissShowcaseRequest) {
         if (dismissShowcaseRequest) {
-            launch {
-                outerAlphaAnimatable.animateTo(
-                    0f,
-                    animationSpec = tween(
-                        durationMillis = 200
-                    )
-                )
-            }
-            launch {
-                outerAnimatable.animateTo(
-                    targetValue = 0.6f,
-                    animationSpec = tween(
-                        durationMillis = 350,
-                        easing = FastOutSlowInEasing,
-                    )
-                )
-            }
+//            launch {
+//                outerAlphaAnimatable.animateTo(
+//                    0f,
+//                    animationSpec = tween(
+//                        durationMillis = 200
+//                    )
+//                )
+//            }
+//            launch {
+//                outerAnimatable.animateTo(
+//                    targetValue = 0.6f,
+//                    animationSpec = tween(
+//                        durationMillis = 350,
+//                        easing = FastOutSlowInEasing,
+//                    )
+//                )
+//            }
             delay(350)
             onShowcaseCompleted()
         }
     }
 
-    animatables.forEachIndexed { index, animatable ->
-        LaunchedEffect(animatable) {
-            delay(index * 1000L)
-            animatable.animateTo(
-                targetValue = 1f, animationSpec = animationSpec
-            )
-        }
-    }
+//    animatables.forEachIndexed { index, animatable ->
+//        LaunchedEffect(animatable) {
+//            delay(index * 1000L)
+//            animatable.animateTo(
+//                targetValue = 1f, animationSpec = animationSpec
+//            )
+//        }
+//    }
 
-    val dys = animatables.map { it.value }
+//    val dys = animatables.map { it.value }
 
     Box(
         modifier = Modifier
-            .alpha(outerAlphaAnimatable.value)
+            //.alpha(outerAlphaAnimatable.value)
     ) {
         Canvas(
             modifier = Modifier
@@ -185,26 +186,32 @@ internal fun ShowcaseContent(
                 }
                 .graphicsLayer(alpha = 0.99f)
         ) {
-            drawCircle(
+            drawRect(
                 color = target.style.backgroundColor,
-                center = outerOffset,
-                radius = outerRadius * outerAnimatable.value,
+                size = Size(Float.MAX_VALUE, Float.MAX_VALUE),
                 alpha = target.style.backgroundAlpha
             )
 
-            dys.forEach { dy ->
-                drawCircle(
-                    color = target.style.targetCircleColor,
-                    radius = maxDimension * dy * 2f,
-                    center = targetRect.center,
-                    alpha = 1 - dy
-                )
-            }
+//            dys.forEach { dy ->
+//                drawCircle(
+//                    color = target.style.targetCircleColor,
+//                    radius = maxDimension * dy * 2f,
+//                    center = targetRect.center,
+//                    alpha = 1 - dy
+//                )
+//            }
 
-            drawCircle(
+//            drawCircle(
+//                color = target.style.targetCircleColor,
+//                radius = targetRadius,
+//                center = targetRect.center,
+//                blendMode = BlendMode.Xor
+//            )
+
+            drawRect(
                 color = target.style.targetCircleColor,
-                radius = targetRadius,
-                center = targetRect.center,
+                topLeft = targetRect.topLeft - Offset(20f, 20f),
+                size = Size(targetCords.size.width.absoluteValue.toFloat()+40f, targetCords.size.height.absoluteValue.toFloat()+40f),
                 blendMode = BlendMode.Xor
             )
         }
